@@ -1,0 +1,11 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/ggordey/codding/clang/HKSS_FromGrounUp/build/cmake_install.cmake",
+		"/home/ggordey/codding/clang/HKSS_FromGrounUp/build/lib/glfw/cmake_install.cmake",
+		"/home/ggordey/codding/clang/HKSS_FromGrounUp/build/lib/glfw/src/cmake_install.cmake",
+		"/home/ggordey/codding/clang/HKSS_FromGrounUp/build/lib/glfw/docs/cmake_install.cmake",
+		"/home/ggordey/codding/clang/HKSS_FromGrounUp/build/src/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
