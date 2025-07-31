@@ -6,6 +6,5 @@ add_executable(shaw
 	main.c
 )
 target_link_libraries(shaw 
-	glfw
-	OpenGL::GL
+	graphics
 )
