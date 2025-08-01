@@ -5,11 +5,12 @@
 #include <GLFW/glfw3.h>
 
 #include "shader.h"
+#include "vertex.h"
 
 static const char *vertex_src = 
 "\
 #version 330 core\n\
-in vec4 pos;\n\
+layout(location = 0) in vec4 pos;\n\
 void main() {\n\
 	gl_Position = pos;\n\
 }"; 
@@ -17,11 +18,13 @@ void main() {\n\
 static const char *frag_src = 
 "\
 #version 330 core\n\
-out vec4 color;\n\
+layout(location = 0) out vec4 color;\n\
 void main() {\n\
 	color = vec4(0.5, 0.0, 0.5, 1.0);\n\
 }"; 
 
+const int res_x = 640 * 2;
+const int res_y = 360 * 2;
 
 int main(int argc, char **argv) {
 	printf("Hello, 'Silksong Form Grounnd Up'!\n");
@@ -37,7 +40,7 @@ int main(int argc, char **argv) {
 	}
 
 	GLFWwindow* window;
-	window = glfwCreateWindow(640 * 2, 360 * 2, "Silksong Form Ground Up", NULL, NULL);
+	window = glfwCreateWindow(res_x, res_y, "Silksong Form Ground Up", NULL, NULL);
 	if(window == NULL) {
 		fprintf(stderr, "No GLFW window for you tooday, GIT GUT");
 		return -1;
@@ -49,16 +52,16 @@ int main(int argc, char **argv) {
 		return -1;
 	}
 	
-	float points[6] =  {
-		-0.5f, -0.5f,
-		 0.0f,  0.5f,
-		 0.5f, -0.5f
+	vertex points[3] =  {
+		(vertex){-0.5f, -0.5f},
+		(vertex){ 0.0f,  0.5f},
+		(vertex){ 0.5f, -0.5f},
 	};
 
 	GLuint buffer; 
 	glGenBuffers(1, &buffer);
 	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 3 * 2 * sizeof(float), points, GL_DYNAMIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(vertex), points, GL_DYNAMIC_DRAW);
 	
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void *)0);
@@ -69,7 +72,7 @@ int main(int argc, char **argv) {
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0) {
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 3); 
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
