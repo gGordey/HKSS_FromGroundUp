@@ -1,8 +1,12 @@
 #include "shader.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
+
 #include <glad/glad.h>
+
+#include "io.h"
 
 static GLuint compile_shader(unsigned int type, const char *src) {
 	GLuint id = glCreateShader(type);
@@ -42,4 +46,24 @@ shader_program create_shader_program(const char *vertex_shader_src, const char *
 	glDeleteShader(fragment);
 	
 	return prog;
+}
+
+char *read_file(const char *filename) {
+	FILE *f = fopen_rel(filename, "r");
+
+	if (f == NULL) {
+		fprintf(stderr, "Could not read file %s\n", filename);	
+		return NULL;
+	} 
+	fseek(f, 0, SEEK_END);
+	int f_size = ftell(f);
+	fseek(f, 0, SEEK_SET);
+	
+	char *data = malloc(f_size * sizeof(char));
+	fread(data, f_size, 1, f);
+	
+	data[f_size] = 0;
+
+	fclose(f);
+	return data;
 }

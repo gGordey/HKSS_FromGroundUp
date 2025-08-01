@@ -5,4 +5,6 @@ typedef unsigned int shader_program;
 
 extern shader_program create_shader_program(const char *fragment_shader_src, const char *vertex_shader_src);
 
+extern char *read_file(const char *filename);
+
 #endif

@@ -6,6 +6,7 @@ add_executable(shaw
 	main.c
 	shader.c
 	object.c
+	io.c
 )
 
 target_link_libraries(shaw 
