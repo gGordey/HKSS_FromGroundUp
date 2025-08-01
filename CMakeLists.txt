@@ -2,6 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 
 project(HKSS_FromGroundUp)
 
+include_directories(include)
 include_directories(lib/glfw/include)
 include_directories(lib/glad/include)
 

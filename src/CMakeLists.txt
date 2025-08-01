@@ -4,6 +4,7 @@ project(HKSS_FromGroundUp)
 
 add_executable(shaw 
 	main.c
+	shader.c
 )
 target_link_libraries(shaw 
 	graphics
