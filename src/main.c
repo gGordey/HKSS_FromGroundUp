@@ -8,25 +8,12 @@
 
 #include "shader.h"
 #include "vertex.h"
+#include "object.h"
 
 const int res_x = 640 * 2;
 const int res_y = 360 * 2;
-const float step = 0.02;
 
-void proc_input(GLFWwindow *w, float *ox, float *oy) {
-	if (glfwGetKey(w, GLFW_KEY_LEFT)) {
-		*ox -= step;
-	}
-	if (glfwGetKey(w, GLFW_KEY_RIGHT)) {
-		*ox += step;
-	}
-	if (glfwGetKey(w, GLFW_KEY_DOWN)) {
-		*oy -= step;
-	}
-	if (glfwGetKey(w, GLFW_KEY_UP)) {
-		*oy += step;
-	}
-}
+void prepare_gl_buffers();
 
 int main(int argc, char **argv) {
 	printf("Hello, 'Silksong Form Grounnd Up'!\n");
@@ -53,12 +40,34 @@ int main(int argc, char **argv) {
 		fprintf(stderr, "Looks like you are not getting GLAD today, but tommorow for shaw!\n");
 		return -1;
 	}
+	prepare_gl_buffers();
+	set_res(res_x, res_y); // for object to render reletive to global coordinates, not opengl ones
 	
-	vertex points[3] =  {
-		(vertex){-0.5f, -0.5f},
-		(vertex){ 0.0f,  0.5f},
-		(vertex){ 0.5f, -0.5f},
+	object o = {0};
+	o.height = 100.0f;
+	o.width = 100.0f;
+
+	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0) {
+		glClear(GL_COLOR_BUFFER_BIT);
+
+		draw_object(&o);
+		
+		glfwSwapBuffers(window);
+		glfwPollEvents();
+	}
+
+	glfwTerminate();
+}
+
+void prepare_gl_buffers() {
+	const unsigned int id[6] = {
+		0, 1, 2,
+		1, 2, 3
 	};
+	GLuint ibo; 
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), id, GL_DYNAMIC_DRAW);
 
 	GLuint buffer; 
 	glGenBuffers(1, &buffer);
@@ -66,32 +75,4 @@ int main(int argc, char **argv) {
 	
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void *)0);
-	
-	char *frag_src = read_file("res/fragment.glsl");
-	char *vertex_src = read_file("res/vertex.glsl");
-	shader_program shader = create_shader_program(vertex_src, frag_src);
-	glUseProgram(shader);
-	
-	float ox = 0, oy = 0;
-	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0) {
-		glClear(GL_COLOR_BUFFER_BIT);
-
-		proc_input(window, &ox, &oy);
-		vertex buf[3] = {
-			(vertex){points[0].x + ox, points[0].y + oy},
-			(vertex){points[1].x + ox, points[1].y + oy},
-			(vertex){points[2].x + ox, points[2].y + oy},
-		};
-		glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(vertex), buf, GL_DYNAMIC_DRAW);
-		glDrawArrays(GL_TRIANGLES, 0, 3); 
-
-
-		glfwSwapBuffers(window);
-		glfwPollEvents();
-	}
-
-	glDeleteProgram(shader);
-	free(frag_src);
-	free(vertex_src);
-	glfwTerminate();
 }
