@@ -59,7 +59,7 @@ char *read_file(const char *filename) {
 	int f_size = ftell(f);
 	fseek(f, 0, SEEK_SET);
 	
-	char *data = malloc(f_size * sizeof(char));
+	char *data = malloc((f_size+1) * sizeof(char));
 	fread(data, f_size, 1, f);
 	
 	data[f_size] = 0;

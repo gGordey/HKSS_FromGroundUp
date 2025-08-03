@@ -5,6 +5,8 @@ typedef struct vertex vertex;
 struct vertex {
 	float x;
 	float y;
+	float tx;
+	float ty;
 };
 
 #endif

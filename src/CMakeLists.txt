@@ -7,6 +7,8 @@ add_executable(shaw
 	shader.c
 	object.c
 	io.c
+	gl_wrapper.c
+	texture.c
 )
 
 target_link_libraries(shaw 

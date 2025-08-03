@@ -5,6 +5,8 @@
 #include <unistd.h>
 #include <libgen.h>
 
+#include "io.h"
+
 FILE *fopen_rel(const char *filename, const char *mode) {
 	char exe_path[PATH_MAX];
 	ssize_t len = readlink("/proc/self/exe", exe_path, sizeof(exe_path) - 1);
