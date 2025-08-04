@@ -5,9 +5,6 @@
 #include <stdlib.h>
 #include <glad/glad.h>
 
-static int res_x = 1;
-static int res_y = 1;
-
 void draw_object(object *obj) {
 	const vertex points[4] = {
 		(vertex){obj->posx, obj->posy, 0.0f, 0.0f}, // top-left
@@ -20,9 +17,3 @@ void draw_object(object *obj) {
 	GET_FN_GL_ERRORS(glDrawElements, (GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL)); 
 }
 
-void set_res(int rx, int ry) {
-	res_x = rx;
-	res_y = ry;
-}
-int get_resx() {return res_x;}
-int get_resy() {return res_y;}
