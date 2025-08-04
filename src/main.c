@@ -6,6 +6,7 @@
 #include "shader.h"
 #include "vertex.h"
 #include "object.h"
+#include "renderable.h"
 #include "gl_wrapper.h"
 
 const int res_x = 640 * 2;
@@ -21,7 +22,15 @@ int main(int argc, char **argv) {
 	GLFWwindow *window = start_gl_glfw(res_x, res_y);
 	get_gl_errors();
 
-	GET_FN_GL_ERRORS(prepare_gl_buffers, ());
+	const unsigned int id[6] = {
+		0, 1, 2,
+		1, 2, 3
+	};
+	GLuint ibo; 
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), id, GL_DYNAMIC_DRAW);
+
 	
 	object o = {0};
 	o.height = 640.0f;
@@ -29,18 +38,37 @@ int main(int argc, char **argv) {
 	
 	shader_program shader = create_shader_from_files("res/shaders/fragment.glsl","res/shaders/vertex.glsl");
 	get_gl_errors();
-	GET_FN_GL_ERRORS(glUseProgram, (shader));
+//GET_FN_GL_ERRORS(glUseProgram, (shader));
 
 	texture hornet = load_texture("res/hornet.png");
+	const vertex points[4] = {
+		(vertex){-0.5,-0.5, 0.0, 0.0},
+		(vertex){-0.5, 0.5, 0.0, 1.0},
+		(vertex){ 0.5,-0.5, 1.0, 0.0},
+  		(vertex){ 0.5, 0.5, 1.0, 1.0} 
+	};
+	const float point[6] = {
+		0.0, 0.0,
+		1.0, 0.0,
+		1.0, 1.0 
+	};
+
+	renderable r = create_renderable(); 
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (const void *)0);
+	glEnableVertexAttribArray(0);
+
+	renderable_data(r, (void *)point);
 
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS && glfwWindowShouldClose(window) == 0) {
 		time += 0.01f;
-		glClearColor(0.2, 0.6, 0.4, 1.0);
+		//glClearColor(0.2, 0.6, 0.4, 1.0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		pass_uniforms(shader);
+//		pass_uniforms(shader);
 
-		draw_object(&o);
+		draw_renderable(r);
+
+//		draw_object(&o);
 		
 		glfwSwapBuffers(window);
 		glfwPollEvents();
