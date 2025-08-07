@@ -13,7 +13,25 @@ void draw_object(object *obj) {
   		(vertex){obj->posx + obj->width, obj->posy + obj->height, 1.0f, 1.0f} // bot-right
 	};
 
-	GET_FN_GL_ERRORS(glBufferSubData,(GL_ARRAY_BUFFER, 0, 4 * sizeof(vertex), points));
-	GET_FN_GL_ERRORS(glDrawElements, (GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL)); 
+	renderable_data(obj->rend, (void *)points);
+	draw_renderable(obj->rend);
 }
 
+object create_object(float width, float height) {
+	object obj = {0};
+	obj.width = width;
+	obj.height = height;
+	obj.rend = create_renderable();
+
+	push_vertex_atrib(&obj.rend, 2, sizeof(float)); // pos.xy
+	push_vertex_atrib(&obj.rend, 2, sizeof(float)); // uv.xy
+
+	return obj;
+}
+
+void destroy_object(object *obj);
+
+void object_position(object *obj, float x, float y) {
+	obj->posx = x;
+	obj->posy = y;
+}

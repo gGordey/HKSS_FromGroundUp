@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include <glad/glad.h>
+#include "gl_wrapper.h"
 
 #include "io.h"
 
@@ -71,7 +72,7 @@ char *read_file(const char *filename) {
 void shader_uniform_i(shader_program shader, const char *name, int value) {
 		const int ulocation = glGetUniformLocation(shader, name);
 		if (ulocation != -1) 
-			glUniform1i(ulocation, value);
+			GET_FN_GL_ERRORS(glUniform1i, (ulocation, value));
 }
 void shader_uniform_f(shader_program shader, const char *name, float value) {
 		const int ulocation = glGetUniformLocation(shader, name);

@@ -8,7 +8,9 @@
 
 typedef struct renderable renderable; 
 struct renderable {
+	GLuint vao;
 	GLuint vbo;
+	GLuint ibo;
 	shader_program shader;
 	texture texture;
 	uint32_t vertex_atrib_generic;
@@ -17,10 +19,12 @@ struct renderable {
 
 extern renderable create_renderable();
 extern void draw_renderable(renderable target);
-extern void push_vertex_atrib(renderable target, int size_bytes);
+extern void push_vertex_atrib(renderable *target, int elements_count, int element_size_bytes);
 extern void bind_renderable(renderable target);
 extern void unbind_renderable();
 extern void renderable_data(renderable target, void *data);
-
+extern void renderable_use_shader(renderable target);
+extern void renderable_set_shader(renderable *target, shader_program shader);
+extern void renderable_set_texture(renderable *target, texture texture);
 
 #endif
