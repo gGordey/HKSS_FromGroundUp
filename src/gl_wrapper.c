@@ -1,5 +1,4 @@
 #include "gl_wrapper.h"
-#include <glad/glad.h>
 
 #define MAKE_ERR_CASE(err) case err: printf("OpenGL error: "#err" (err_code: %d)\n",  err_code); break;
 int get_gl_errors() {
@@ -18,4 +17,33 @@ int get_gl_errors() {
 		}
 	}
 	return errors;
+}
+
+GLFWwindow *start_gl_glfw(int res_x, int res_y) {
+    if (!glfwInit()) {
+		char *ErrorLogBuf;
+		int glfwErrorCode = glfwGetError((const char**)&ErrorLogBuf);
+	
+		fprintf(stderr,"Not init glfw for some reason, here is an error btw: %s\n", ErrorLogBuf);
+		
+		glfwTerminate();
+		return NULL;
+	}
+
+	GLFWwindow* window;
+	window = glfwCreateWindow(res_x, res_y, "Silksong Form Ground Up", NULL, NULL);
+	if(window == NULL) {
+		fprintf(stderr, "No GLFW window for you tooday, GIT GUT");
+		return NULL;
+	}
+	glfwMakeContextCurrent(window);
+
+	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+		fprintf(stderr, "Looks like you are not getting GLAD today, but tommorow for shaw!\n");
+		return NULL;
+	}
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_BLEND);
+	return window;
 }

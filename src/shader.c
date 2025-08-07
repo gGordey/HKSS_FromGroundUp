@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include <glad/glad.h>
+#include "gl_wrapper.h"
 
 #include "io.h"
 
@@ -66,4 +67,27 @@ char *read_file(const char *filename) {
 
 	fclose(f);
 	return data;
+}
+
+void shader_uniform_i(shader_program shader, const char *name, int value) {
+		const int ulocation = glGetUniformLocation(shader, name);
+		if (ulocation != -1) 
+			GET_FN_GL_ERRORS(glUniform1i, (ulocation, value));
+}
+void shader_uniform_f(shader_program shader, const char *name, float value) {
+		const int ulocation = glGetUniformLocation(shader, name);
+		if (ulocation != -1) 
+			glUniform1f(ulocation, value);
+}
+
+shader_program create_shader_from_files(const char *vertex_filename, const char *fragment_shader_src) {
+	char *frag_src = read_file("res/shaders/fragment.glsl");
+	char *vertex_src = read_file("res/shaders/vertex.glsl");
+
+	shader_program shader = create_shader_program(vertex_src, frag_src); 
+
+	free(frag_src);
+	free(vertex_src);
+
+	return shader;
 }
