@@ -39,6 +39,7 @@ renderable create_renderable() {
 
 void renderable_data(renderable target, void *data) {
 	bind_renderable(target);
+	if (target.texture.id != 0) glBindTexture(GL_TEXTURE_2D, target.texture.id);
 	glBufferSubData(GL_ARRAY_BUFFER, 0, 4 * sizeof(vertex), data);
 	unbind_renderable();
 }
@@ -60,4 +61,8 @@ void push_vertex_atrib(renderable *target, int elements_count, int element_size_
 
 void renderable_use_shader(renderable target) {
 	glUseProgram(target.shader);
+}
+
+void renderable_set_texture(renderable *target, texture texture) {
+	target->texture = texture;
 }
